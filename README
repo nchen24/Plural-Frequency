@@ -1,0 +1,91 @@
+Author:      Nick Chen
+Date:        February 13th, 2014
+Description: Your task is to write a script that determines which words in this
+             corpus appear in their plural form more often than in their
+             singular form. Write out these words, and the percentage of the
+             time they are pluralized, to a file.  Sort the results from most to
+             least frequently pluralized. Include a reasonable threshold for the
+             number of times a word has to appear for it to count.
+
+             Make simplifying assumptions (and please describe the assumptions
+             you're making in your comments). While we expect your code to
+             recognize the most common patterns for pluralizing words, for
+             example, we do not necessarily expect it to know that "corpora" is
+             the plural of "corpus".
+
+             You may use any external libraries or data you wish.  Please submit
+             your code in python whenever you'd like.
+
+Notes:       Liberal use of stackoverflow, Google, and Python docs was made.  I
+             am not the most adept Python programmer, but I did try to adhere to
+             good programming and commenting practices.  I have deviated from
+             the two of the PEP8 guidelines.
+             
+             Due to my background using vim, I have deviated from following E221
+             (multiple spaces before operator), as I think it looks better to
+             have the LHS and RHS of multiple variables lined up (in this case,
+             primarily on the globals).
+             
+             I have also deviated from E702 (multiple statements on one line)
+             because I felt that defaultdict was more elegant than:
+                if word not in d:
+                    d[word] = 1
+                else:
+                    d[word] += 1
+
+            Furthermore, the following simplifying assumptions have been made:
+                * I have taken "plural form more often than in their singular
+                  form" to mean "strictly more often."
+                * Only nouns may be plural.  Though verbs may be plural when
+                  referring to a third person entity (as in the case of "He has
+                  a dog" vs "They have a dog" or "He eats a taco" vs "They eat
+                  tacos"), I assumed that that the objective was to do this for
+                  nouns.  Pronouns may also be plural (they, we, us, them), but
+                  because these do not have a clear singular counterpart, I have
+                  chosen to exclude them.
+                * Rules of plurality have been left to the inflect module.
+                  Certain cases do cause inflect to break (one that I found was
+                  "two-by-fours," so I have written a weak wrapper to attempt to
+                  circumvent such problems (it does happen to recognize
+                  "corpora," though! :-) ).
+                * Certain words have multiple recognized plural forms.  One such
+                  example is the infamous "octopus."  Both "octopodes" and
+                  "octopuses" are considered valid plural forms of "octopus,"
+                  however their statistics are not combined.  "Octopuses" and
+                  "octopodes" will be compared individually against "octopus,"
+                  so it is entirely possible that words that come from Latin or
+                  Ancient Greek may incorrectly not appear in the list.  For
+                  example, if "octopodes" appears 3 times, "octopuses" occurs 4
+                  times, and "octopus" occurs 5 times, neither "octopodes" nor
+                  "octopuses" will appear in the list.
+                * Certain words are inconsistently labeled in brown_corpus.  The
+                  most flagrant violators are numbers and units.  "cm." for
+                  example, shows up both as "nn" and "nns".
+
+            This README and code is intended only for Catherine Havasi and other
+            employees of Luminoso. Please do not redistribute either the code or
+            the question to non-employees of Luminoso.
+
+
+Tested on:
+    Python 2.7.5
+    GCC 4.2.1
+    Apple LLVM 5.0
+    clang-500.0.68
+    on darwin
+
+Dependencies:
+    Python 2.6/7 
+
+    inflect: 
+        Documentation: https://pypi.python.org/pypi/inflect
+        Installation: pip install -e git+https://github.com/benthor/inflect.py#egg=inflect
+
+How to run:
+    This script can either be run with no arguments, in which case it will
+    attempt to use "./brown_corpus/" as the corpus and "output.txt" as the
+    output file.  Be warned that no check is made to make sure that an existing
+    "output.txt" is not clobbered.
+
+    python Luminoso.py
+    python Luminoso.py [CORPUS_PATH] [OUTPUT_FILE]
